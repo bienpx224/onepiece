@@ -1,33 +1,31 @@
+import React from "react";
+import {
+  BrowserRouter,
+  useNavigate,
+  Routes,
+  Route,
+  Navigate 
+} from "react-router-dom";
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import Home from "./components/Home";
+import Test from "./components/Test";
+import reducer from "./store/reducer/reducer";
+import { createBrowserHistory } from "history";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {connect} from 'react-redux';
-import {BrowserRouter as Router,Route,Switch,Ridirect,hashHistory,Redirect,NavLink} from 'react-router-dom';
+const store = createStore(reducer)
+const hist = createBrowserHistory()
 
-import Home from 'Home'
-var {Provider} = require('react-redux');
-var store = require('./store/store');
-
-
-class App extends React.Component{
-     render(){
-        return(
-
-            <Provider store={store}>
-            <Router history={hashHistory}>
-                  <Layout>
-                   <Switch>
-                      <Route  exact path="/" component={Home}/>
-                      <Route  path="/home" component={Home}/>
-                      <Route render={function(){
-                          return <Home />
-                      } } />
-                    </Switch>
-                  </Layout>
-            </Router>
-            </Provider>
-    )
-  }
+export default function App() {
+  return (
+    <Provider store={store}>
+    <BrowserRouter history={hist}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/test" element={<Test />} />
+        <Route path="*" element={<Home/>}/>
+      </Routes>
+    </BrowserRouter>
+    </Provider>
+  );
 }
-
-export default App;
