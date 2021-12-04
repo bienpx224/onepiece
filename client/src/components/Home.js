@@ -7,7 +7,7 @@ class Home extends React.Component{
     this.state={
       isLogin : false,
       loading: true,
-      testStr : "nothing"
+      testStr : "home"
     }
   }
   componentWillReceiveProps(nextProps){
@@ -21,7 +21,7 @@ class Home extends React.Component{
     return(
         <div>
             HELLO WORLD
-            {this.props.testStr}
+            {this.state.testStr}
             <h2>Test component</h2>
             <Test />
         </div>
@@ -29,4 +29,6 @@ class Home extends React.Component{
   }
 }
 
-export default connect(mapStateToProps)(Home);
+export default connect( function(state){
+  return {testStr: state.testReducer.testStr};
+})(Home);

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/bienpx224/onepiece/issues"
   },
-  "homepage": "https://github.com/bienpx224/onepiece#readme"
+  "homepage": "https://github.com/bienpx224/onepiece#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.0"
+  }
 }

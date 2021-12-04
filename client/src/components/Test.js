@@ -8,13 +8,14 @@ class Test extends React.Component{
     this.state={
       isLogin : false,
       loading: true,
-      testStr : "nothing"
+      testStr : "test"
     }
   }
 
-  handleLogin() {
+  handleLogin (){
+    console.log(this.props)
     let {dispatch} = this.props;
-    dispatch(change_testStr("login"))
+    dispatch(change_testStr("changeState"))
   }
 
   render(){
@@ -24,13 +25,14 @@ class Test extends React.Component{
       <input
         type="text"
         placeholder="Username"
-        value={username}
-        onChange={event => setUsername(event.target.value)}
+        value={this.state.testStr}
       />{" "}
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={this.handleLogin.bind(this)}>Login</button>
     </div>
     )
   }
 }
 
-export default connect(mapStateToProps)(Test);
+export default connect( function(state){
+  return {};
+})(Test);
