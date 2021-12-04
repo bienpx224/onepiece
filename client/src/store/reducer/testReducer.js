@@ -1,6 +1,6 @@
 var data = {
     err: null,
-    testStr: ""
+    testStr: "init"
 };
 
 var test = (state = data, action) =>{

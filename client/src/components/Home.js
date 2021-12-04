@@ -1,34 +1,20 @@
-import React from 'react';
-import { connect } from "react-redux";
-import Test from "./Test"
-class Home extends React.Component{
-  constructor(props){
-    super(props);
-    this.state={
-      isLogin : false,
-      loading: true,
-      testStr : "home"
-    }
-  }
-  componentWillReceiveProps(nextProps){
-    if(nextProps.testStr){
-      this.state.testStr = nextProps.testStr;
-      this.setState(this.state);
-    }
-  }
+import React, {useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import Banner from './banner/Banner';
+import Header from "./header/Header"
 
-  render(){
+const Home  = ()=>{
+    const [user, setUser] = useState("")
+    const testStr = useSelector((state) => state.testReducer.testStr )
+
     return(
         <div>
-            HELLO WORLD
-            {this.state.testStr}
-            <h2>Test component</h2>
-            <Test />
+            <Header />
+            <Banner />
         </div>
     )
-  }
+  
 }
 
-export default connect( function(state){
-  return {testStr: state.testReducer.testStr};
-})(Home);
+export default React.memo(Home);  // Sử dụng memo khi mà trang thường xuyên bị re-render những thành phần ko cần thiết.
+// React.memo chỉ có thể xác định việc rerender dựa trên sự thay đổi của props

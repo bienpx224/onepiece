@@ -292,7 +292,7 @@ const abi = [
             },
             {
                 "indexed": false,
-                "internalType": "enum CryptoZooNFT.Tribe",
+                "internalType": "enum OnepieceFT.Tribe",
                 "name": "tribe",
                 "type": "uint8"
             }
@@ -414,7 +414,7 @@ const abi = [
                 "type": "address"
             },
             {
-                "internalType": "enum CryptoZooNFT.Tribe",
+                "internalType": "enum OnepieceFT.Tribe",
                 "name": "tribe",
                 "type": "uint8"
             }
@@ -557,7 +557,7 @@ const abi = [
                         "type": "uint256"
                     }
                 ],
-                "internalType": "struct CryptoZooNFT.ItemSale",
+                "internalType": "struct OnepieceFT.ItemSale",
                 "name": "",
                 "type": "tuple"
             }
@@ -583,7 +583,7 @@ const abi = [
                         "type": "uint256"
                     },
                     {
-                        "internalType": "enum CryptoZooNFT.Tribe",
+                        "internalType": "enum OnepieceFT.Tribe",
                         "name": "tribe",
                         "type": "uint8"
                     },
@@ -608,7 +608,7 @@ const abi = [
                         "type": "uint256"
                     }
                 ],
-                "internalType": "struct CryptoZooNFT.CryptoZoon",
+                "internalType": "struct OnepieceFT.Onepiece",
                 "name": "",
                 "type": "tuple"
             }
@@ -680,7 +680,7 @@ const abi = [
                 "type": "address"
             },
             {
-                "internalType": "enum CryptoZooNFT.Tribe[]",
+                "internalType": "enum OnepieceFT.Tribe[]",
                 "name": "tribes",
                 "type": "uint8[]"
             }
@@ -1487,7 +1487,7 @@ const paymentAbi = [
     },
     {
         "inputs": [],
-        "name": "cryptoZoon",
+        "name": "Onepiece",
         "outputs": [
             {
                 "internalType": "contract ZoonERC20",
