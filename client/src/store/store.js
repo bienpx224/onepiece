@@ -1,10 +1,8 @@
 
 import thunk from 'redux-thunk';
-var redux = require('redux');
-var reducer = require('./reducer/reducer');
+import {createStore, applyMiddleware, compose} from 'redux';
+var reducer = require('./reducers/reducer');
  //var store = redux.createStore(reducer);
- var store = redux.createStore(reducer,redux.compose(redux.applyMiddleware(thunk),
-   window.devToolsExtension? window.devToolsExtension(): f => f
- ));
- store.subscribe( ()=>{console.log("store: ")})
+ var store = createStore(reducer, applyMiddleware(thunk));
+ store.subscribe( ()=>{console.log(store)})
  module.exports = store;

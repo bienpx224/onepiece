@@ -1,0 +1,202 @@
+1. Hướng dẫn tạo Ví meta mask test block chain và smart contract.
+    - Tải meta mask extension chorme. Tạo ví mới, lưu ý nhớ giữ kỹ khoá bí mật. Tạo thành công ví
+     thì sẽ ra được Account 1. Copy lấy địa chỉ ví Account 1.
+    - Mặc định đang ở mạng ETH Mainet, ấn vào chuyển sang mạng Rinkeby Test Network để có thể dùng test 
+    trong mạng smart contract ở local mà chúng ta sẽ tạo.
+    - Đặc biệt để có thể thực thi smart contract sẽ cần phí, ở mạng này chúng ta có thể xin dc cấp ETH 
+    để test.
+    - Cách lấy ETH test: Vào trang https://faucet.rinkeby.io/ ở trên chorme.
+    - Trong trang đó ở dưới mục 'how does this work?' bạn sẽ phải chọn đăng bài lên tweeter hoặc fb,
+    bài đăng sẽ có dạng nội dung như sau: 
+    " Requesting faucet funds into 0x98988aE5D94730000E42D42bC6af44DcDba69AE9 on 
+    the #Rinkeby #Ethereum test network. "
+    - Trong đó bạn thay dãy số kia thành địa chỉ ví meta mask mà b muốn nhận ETH vào.
+    - Sau đó b coppy link bài đăng đó, paste vào trang https://faucet.rinkeby.io/ rồi chọn Give me Ether.
+    Bên dưới sẽ chọn số lượng Ether và số thời gian xét duyệt. VD chọn nhận 18,75 Ether thì phải đợi 3 ngày
+    * Cách lấy ETH test easier: 
+    - https://faucets.chain.link/rinkeby
+    - Join telegram : https://t.me/bitsznbot 
+    ================== END ====================
+
+2. Hướng dẫn Create smart contract base project and deploy it for test by using Truffle and Ganache. 
+    - Link document truffle : https://www.trufflesuite.com/docs/truffle/quickstart
+    - First you need install nodejs environment. (Google search)
+    - Run cmd in everywhere: npm install truffe -g    // install truffle module in global
+    - Now you have 2 choices: 
+        + Create a bare project: Run cmd 
+            mkdir demo 
+            cd demo
+            truffle init
+        + Create a base simple project: RECOMMEND for HTML 
+            truffle unbox pet-shop      
+        + Create a base simple project: RECOMMEND for REACT
+            truffle unbox react     
+    - Once this operation is completed, you'll now have a project structure with the following items:
+        contracts/: Directory for Solidity contracts
+        migrations/: Directory for scriptable deployment files
+        test/: Directory for test files for testing your application and contracts
+        truffle.js: Truffle configuration file
+    - Edit, Add or Create what contract you like or you see on internet.
+    - In migrations. create a new file migration to deploy your contract. first file 1_initial_migration.js
+    is use for default init. You need create a file like 2_demo_migration.js. 2_ is important it help truffle 
+    know the order to exec. In this file 2_demo_migration is code deploy your smart contract you created
+    in folder contracts/ : 
+    Content File eg: 
+        Simple : const Minigame2 = artifacts.require("Minigame2");    
+                deployer.deploy(Minigame2);
+        OR : 
+        const cryptoHerosToken = await deployer.deploy(CryptoHerosToken, "CryptoHerosToken", "HERO");
+        const cryptoHerosGame = await deployer.deploy(CryptoHerosGame, CryptoHerosToken.address);
+
+    - Run cmd : truffle compile    -> create folder buid/contracts. You can see byte code, abi ,... of your 
+    contract in this.
+    - Download and install Ganache.
+    - Open truffle-config.js : Replace the content: 
+                    networks: {
+                        development: {
+                        host: "127.0.0.1",
+                        port: 7545,
+                        network_id: "*"
+                        }
+                    }
+    -> This will allow a connection using Ganache's default connection parameters.
+    - Launch Ganache. See in tab Account : default you have 10 account and some ETH in wallet. Change 
+    to tab Transactions to ready follow the smart contract you create after.
+    
+    - On the terminal, migrate the contract to the blockchain created by Ganache:
+        truffle migrate 
+    - If success , check on Ganache tab Transactions, See the log Create contract, Contract call.
+    First Create contract on bottom is 1_initial_migration by default, so your smart contract create 
+    is the second.
+    - If you want re-deploy your contract : Run cmd : 
+            truffle migrate --reset
+    -> OK create contract on Ganache by truffle. You can get abi and address of Contract to use in 
+    web, web3 and connect Metamask to Smart Contract 
+     --------------------------------
+    - To use console and test contract in truffle: 
+    - Run cmd :  truffle console
+    - Với những function của contract có trả về dữ liệu thì là Promise. 
+    Ví dụ getBalance của contract Metacoin.sol: ấn tab tab để hiện list attribute
+        let instance = await MetaCoin.deployed()    
+        let accounts = await web3.eth.getAccounts()
+        let balance = await instance.getBalance(accounts[0])
+        balance.toNumber()    // it return your balance
+    - Transfer some metacoin from one account to another:     
+            truffle(development)> instance.sendCoin(accounts[1], 500)
+    - Check the balance of the account that received the metacoin:
+            truffle(development)> let received = await instance.getBalance(accounts[1])
+            truffle(development)> received.toNumber()
+    - Check the balance of the account that sent the metacoin:
+            truffle(development)> let newBalance = await instance.getBalance(accounts[0])
+            truffle(development)> newBalance.toNumber()
+
+    =================== Để sử dụng Smart contract ta vừa build được trên Metamask =========== 
+    - Ta cần mở Ganache để sẵn đó, mở Metamask, thêm vào network mới với các tham số : 
+        + network name : Tuỳ 
+        + New RPC URL : http://12.0.0.1:7545 
+        + ChainID : 1337 
+    - Thế là ok, có thể import address account của Ganache để nhìn thấy số dư taì khoản và thao tác SM.
+    
+
+2.5: Hướng dẫn Deploy contract trên Remix : 
+    - Viết 1 contract -> compile -> copy ABI ở trong phần compile đó
+    - CHuyển xuống tab dưới, chọn Environment là Injected web3 -> chọn ví metamask có eth của mình
+    - Chọn deploy, xác thực giao dịch trên metamask -> báo OK, copy address SM 
+
+2.6: Hướng dẫn kết nối web với metamask : 
+        const web3 = new Web3(window.ethereum); // Khởi tạo kết nối web3
+        window.ethereum.enable();
+
+        // Create contract for Metamask
+            var contract_MetaM = new web3.eth.Contract(abi, addressSM)
+            => có thể call function của SM bằng contract_MetaM : 
+                    contract_MetaM.methods.DangKy(data.maloi._id).send({
+                        from: currentAccount
+                    })
+        // Function check exist meta mask : 
+            function checkExistMetamask() {
+                if (typeof window.ethereum !== 'undefined') {
+                    console.log('MetaMask is installed!');
+                } else {
+                    alert("Cai metamask di")
+                    console.log("MetaMask is NOT installed")
+                }
+            }
+        // To connect Metamask and get address : 
+            async function connectMetamask() {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                return accounts;
+            }
+            connectMetamask().then((data)=>{
+                currentAccount = data[0]
+            }).catch((err)=>{
+            })
+        // Bắt sự kiện người dùng thay đổi địa chỉ ví Metamask : 
+            ethereum.on('accountsChanged', function (accounts) {
+                currentAccount = accounts[0]
+            });
+
+
+3. Sử dụng Infura để hứng emit trả về trên SMC: 
+ - Lên trang Infura.io, tạo tk, tạo project, chọn mạng Rinkeby. Coppy link wss trong project setting
+ - Khi 1 user call SM, SM emit, nó sẽ bắn về server Infura, từ đó infura sẽ bắn lại đến các user khác bằng web3
+ - Ở dưới Client. Viết lắng nghe infura qua websocket trong file js: 
+        var provider = new Web3.providers.WebsocketProvider("wss://rinkeby.infura.io/ws/v3/077ab073d7ba4a40b84ececf6a82eee0")
+        var web3_infura = new Web3(provider)
+    // Create contract for Infura connect SM by abi and addressSM
+        var contract_infura = web3_infura.eth.Contract(abi, addressSM)
+    // Listen event from emit on server SM : EVERY WEB WILL LISTEN
+        contract_infura.events.SM_ban_data({filter:{}, fromBlock:"latest"}, function(err, event){
+            if(err){
+                console.log("Event error: "+ err)
+            }else{
+                console.log(event)
+            }
+        })  
+
+4.1: Smart contract tạo Token Coin : 
+    - Sử dụng thư viện openzepplin, có thể import link hoặc tải cả folder về sử dụng.
+    - Tạo Token theo chuẩn ERC20: 
+        + Tạo 1 file tên là TestToken.sol .
+        + Import thư viện : import ".././@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+            contract OnepiToken is ERC20 {
+                address public admin;
+                constructor() ERC20("Onepiece Token", "OPT") {
+                    _mint(msg.sender, 1000000 * (10 ** uint256(decimals())));
+                    admin = msg.sender;
+                    _approve(address(this), msg.sender, totalSupply());
+                }
+            }
+        + Thế là xong. 
+    - Tạo token theo chuẩn IERC20, tức là ta tự viết lại các function ERC20: 
+     VD : https://github.com/bienpx224/onepiece/blob/main/contracts/Token/OneToken.sol
+
+    ** LƯU Ý ** 
+    - Hàm TransferFrom cho phép người thứ 2 chuyển tiền của người thứ 1 cho người thứ 3.
+    Trước đó người thứ 1 phải gọi hàm allowance cho address người 2, và truyền amount mà ng 2 có thể chuyển.
+    - Check số tiền người 2 có thể chuyển đi của người 1 ở hàm allowance(owner , spender)
+    - Nếu ng 2 đã được ng 1 allow với 1 số tiền là a, thì người 2 có thể call hàm 
+    TransferFrom (address user_1, address _to, uint amountMaxA);
+
+    =========== BUILD SMART CONTRACT TẠO TOKEN LÊN RINKEBY TESTNET =================
+    Sau khi đã viết xong Contract, ta đưa lên trang remix, compile. Có lỗi thì fix
+    - TIếp theo chuyển sang tab Deploy & Run Transaction, Trong Environment chọn Inject web3 để connect metamask
+    build lên mạng Rinkeby. 
+    - Sau khi thành công ta sẽ thấy bên dưới là Contract Token, coppy address token và vào metamask, import token.
+    - Nếu ở address wallet tạo token đó thì sẽ thấy wallet đó đang có totalSupply của đồng Token đó. 
+    - Vậy là thành công rồi, ta có thể tương tác với Smart contract đó bằng web3 dựa vào abi và address SM. Đã HD ở trên.
+
+
+4. Smart Contract tạo Token NFT : ( Sử dụng chuẩn ERC721): 
+    - SỬ dụng thư viện openzeppelin github. import bằng npm, link hoặc add file manunal.
+    ERC721 hay ERC20 là quy chuẩn để tạo token (erc20) hoặc quy chuẩn tạo token nft (erc721).
+    Trong thư viện này sẽ có sẵn các hàm phục vụ cho việc mua bán token,... 
+    - Khởi tạo Contract is ERC721 : 
+
+
+
+    
+
+
+

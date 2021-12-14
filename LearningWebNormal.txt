@@ -1,0 +1,148 @@
+1. Hướng dẫn đẩy web lên heroku: 
+    - Create account. create new app.
+    - Change to tab Deploy. 
+    Open terminal : 
+                    npm install heroku -g   
+                    heroku login
+    You have 2 choice : 
+        + You don't have git project: 
+            cd /path_to_project 
+            git init 
+            heroku git:remote -a <your_name_app>
+            // edit .gitignore file to except push. Eg: node_modul es
+            git add .
+            git commit -m "message"
+            git push heroku master
+        + You have git project : heroku git:remote -a demoblock
+
+    - Create a file name Procfile in project folder with content: Heroku see this file to run:
+                Web: node server
+
+2. Build 1 web từ đâu : Nodejs + Mongo + React : 
+https://www.freecodecamp.org/news/create-a-react-frontend-a-node-express-backend-and-connect-them-together-c5798926047c/
+    - Build Nodejs + Mongo server side : 
+        npx express-generator <name_project>
+        cd <name_project>
+        npm install
+        npm start   or  node app 
+
+    - Build React: 
+        npx create-react-app client
+        cd client
+        npm start
+    - Từ đó ta có base server nodejs và base react. 
+    - Nodejs lưu ý để khi build react thì server sẽ chạy vào file build client: 
+        + Trước khi khai báo router api server, ta cần khai báo trỏ đến file build client, để chạy được client : 
+                // Have Node serve the files for our built React app
+                app.use(express.static(path.resolve(__dirname, '../client/build')));
+        + Ở phía Client react thì config lại script build trong package.json để file build ra sẽ ở folder của server luôn.
+        "build": "react-scripts build && rm -rf ../server/client/build && mv build ../server/client/build",
+    
+    - Hướng dẫn tạo base React + Redux : 
+        + Ở App.js, Khai báo cơ bản store, reducer, history và define các Route bên ngoài hoặc vào 1 Component cụ thể naò đó,
+        Ở đây mình define các Route : 
+                import React from "react";
+                import {BrowserRouter,Routes,Route} from "react-router-dom";
+                import { createStore } from 'redux'
+                import { Provider } from 'react-redux'
+                import Home from "./components/Home";
+                import reducer from "./store/reducer/reducer";
+                import { createBrowserHistory } from "history";
+
+                const store = createStore(reducer)
+                const hist = createBrowserHistory()
+
+                export default function App() {
+                return (
+                    <Provider store={store}>
+                    <BrowserRouter history={hist}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/test" element={<Home />} />
+                        <Route path="*" element={<Home/>}/>
+                    </Routes>
+                    </BrowserRouter>
+                    </Provider>
+                );
+                }
+        + Tạo các file phục vụ cho Redux : action, reducer và store nào : demo mẫu file cơ bản nhé : 
+        Action và Reducer có thể tạo thành nhiều file để phân chia cho dễ, ở đây mình chỉ để 1 file demo: 
+            - Action : Dùng để dispatch(action())  gọi hàm để thay đổi state trong redux : testAction.js
+                function change_testStr(str){
+                    return {type:"CHANGE_TEST_STR", data: str}
+                }
+                module.exports = {change_testStr}
+            - Reducer : Lưu trữ dữ liệu state của Redux : testReducer.js
+                    var data = {    // Thông tin lữu trữ trên redux 
+                        err: null,
+                        testStr: "init"
+                    };
+
+                    var test = (state = data, action) =>{
+                        switch (action.type) {
+                        case "CHANGE_TEST_STR":
+                            return {...state, testStr:action.data};
+                            break;
+                        default: return state;
+                    
+                        }
+                    }
+                    module.exports = test;
+            - File combine các Reducer : reducer.js
+                    var redux = require('redux');
+                    var testReducer = require('./testReducer');
+                    var reducer = redux.combineReducers({testReducer});
+                    module.exports = reducer;
+
+            - File store để tạo store lưu trữ các reducer : 
+
+                    import thunk from 'redux-thunk';
+                    var redux = require('redux');
+                    var reducer = require('./reducer/reducer');
+                    //var store = redux.createStore(reducer);
+                    var store = redux.createStore(reducer,redux.compose(redux.applyMiddleware(thunk),
+                    window.devToolsExtension? window.devToolsExtension(): f => f
+                    ));
+                    store.subscribe( ()=>{console.log("store: ")})
+                    module.exports = store;
+
+        - Theo Cấu trúc V6, ta có thể gọi data trong Redux bằng cấu trúc sau : Trong bài sử dụng Functional Component.
+
+        Mỗi lần redux có sự thay đổi data thì testStr sẽ tự động cập nhập: 
+            import {  useDispatch } from 'react-redux';
+            const Home  = ()=>{
+                const testStr = useSelector((state) => state.testReducer.testStr )
+                ....
+        - Để thay đổi dữ liệu trong Redux, ta sử dụng dispatch() call action change_testStr(): 
+            import {  useDispatch } from 'react-redux';
+            import {change_testStr} from "../store/action/testAction"
+            const Test = (props)=>{
+                const dispatch = useDispatch();
+                
+                // Component Did Mount thì change data testStr redux 
+                React.useEffect(() => {
+                    fetch("/api")
+                    .then((res) => res.json())
+                    .then((data) => {
+                        setUser(data.message);
+                        dispatch(change_testStr("changeState"))  // change data redux bằng action change_testStr
+                        });
+                }, []);
+        - Vậy là cơ bản đã xong xử lý dữ liệu với Redux, 
+        Trong cú pháp React V6 này, cách khai báo props và state của function component như sau: 
+        + khai báo : <Test message="1" bien="2" />
+            const Test = (props)=>{
+                -> props.message = 1 và props.bien = 2
+        + Khai báo state : 
+            const [user, setUser] = useState("bien") // state user, hàm setUser là hàm setState, default là "bien"
+    - Sử dụng Navigate để điều hướng chuyển trang, chuyển Route : 
+            import { useNavigate } from 'react-router-dom';
+            const navigate = useNavigate();
+            ()={
+                navigate("/some-where")
+            }
+            
+            
+
+
+        

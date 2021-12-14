@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-
+.btn-green::before{
+    background:linear-gradient(330deg, rgb(61 221 45) 0%, rgb(40 50 30) 100%) !important;
+}
+.btn-green::after{
+    background:linear-gradient(330deg, rgb(61 221 45) 0%, rgb(40 50 30) 100%) !important;
+}
 :root {
     --heading-font: 'Ubuntu', sans-serif;
     --para-font: 'Ubuntu', sans-serif;
@@ -4587,7 +4592,7 @@ svg {
 .copy-contract input {
     background: transparent !important;
     color: var(--main-color);
-    font-weight: 500;
+    font-weight: 300;
     border: solid 1px var(--white);
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;

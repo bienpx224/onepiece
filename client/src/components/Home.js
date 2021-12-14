@@ -4,8 +4,15 @@ import Banner from './banner/Banner';
 import Header from "./header/Header"
 
 const Home  = ()=>{
-    const [user, setUser] = useState("")
-    const testStr = useSelector((state) => state.testReducer.testStr )
+    const [user, setUser] = useState("bieneibe")
+
+
+    // Component Did Mount 
+    React.useEffect(() => {
+        fetch("/api")
+          .then((res) => res.json())
+          .then((data) => {console.log(data);setUser(data.message)});
+      }, []);
 
     return(
         <div>

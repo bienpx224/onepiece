@@ -1,7 +1,7 @@
 module.exports = function(app){
 
-    app.get('/char', (req,res)=>{
-        res.send("OKAY")
+    app.get('/api/char', (req,res)=>{
+        res.send({message: "Char server"})
     })
 
 

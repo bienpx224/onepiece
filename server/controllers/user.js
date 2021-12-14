@@ -1,7 +1,7 @@
 module.exports = function(app){
 
-    app.get('/', (req,res)=>{
-        res.send("OKAY")
+    app.get('/api/', (req,res)=>{
+        res.send({message:"server"})
     })
 
     

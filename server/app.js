@@ -6,6 +6,7 @@ app.use(express.static("public"));
 app.use(cors())
 app.set("view engine", "ejs");
 app.set("views", "./views");
+const path = require('path');
 
 
 const server = require("http").Server(app)
@@ -29,8 +30,16 @@ mongoose.connect(`${process.env.MONGODB_URI}`, function(err){
     }
 });
 
+// Have Node serve the files for our built React app
+app.use(express.static(path.resolve(__dirname, '../client/build')));
+
 require('./controllers/user')(app)
 require('./controllers/char')(app)
+
+// All other GET requests not handled before will return our React app
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+  });
 
 app.use(function(req,res,next){
     next(createError(404))

@@ -1,13 +1,16 @@
 import React, {useState} from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {change_testStr} from "../store/action/testAction"
+import {  useDispatch } from 'react-redux';
+import {change_testStr} from "../store/actions/testAction"
+import { useNavigate } from 'react-router-dom';
 
 const Test = (props)=>{
+  const navigate = useNavigate();
   const [testStr, setTestStr] = useState("Test")
   const dispatch = useDispatch();
   const handleLogin = ()=>{
-    console.log("handleLogin")
+    console.log("handleLogin: ")
     dispatch(change_testStr("changeState"))
+    navigate('/')
   }
 
     return(

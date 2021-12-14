@@ -6,8 +6,8 @@ import HeaderBot from "./HeaderBot"
 const Header = ()=>{
 
     return(
-      <header class="header-section" id="header">
-      <div class="header">
+      <header className="header-section" id="header">
+      <div className="header">
             <HeaderTop />
             <HeaderBot />
         </div>
